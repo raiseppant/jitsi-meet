@@ -1206,7 +1206,7 @@ export default {
 
         logger.debug(`New E2EE key: ${this.e2eeKey}`);
 
-        this.room.setE2EEKey(this.e2eekey);
+        this._room.setE2EEKey(this.e2eekey);
     },
 
     /**
