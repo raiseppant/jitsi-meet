@@ -238,13 +238,17 @@ publishing {
     }
     repositories {
         maven {
-            url rootProject.ext.mavenRepo
-            if (!rootProject.ext.mavenRepo.startsWith("file")) {
-                credentials {
-                    username rootProject.ext.mavenUser
-                    password rootProject.ext.mavenPassword
-                }
-            }
+                    url rootProject.ext.mavenRepo
+                    if (!rootProject.ext.mavenRepo.startsWith("file")) {
+                        credentials(HttpHeaderCredentials) {
+                            name  = 'Private-Token'
+                            value = gitLabPrivateToken
+                        }
+                        authentication {
+                            header(HttpHeaderAuthentication)
+                        }
+
+                    }
         }
     }
 }
