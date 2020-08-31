@@ -21,13 +21,13 @@ export default class ToolboxItem extends AbstractToolboxItem<Props> {
         super(props);
 
         this._onKeyDown = this._onKeyDown.bind(this);
-        this._onKeyUp = this._onKeyUp.bind(this);
     }
 
     _onKeyDown: (Object) => void;
 
     /**
      * Handles 'Enter' key on the button to trigger onClick for accessibility.
+     * We should be handling Space onKeyUp but it conflicts with PTT.
      *
      * @param {Object} event - The key event.
      * @private
@@ -41,34 +41,6 @@ export default class ToolboxItem extends AbstractToolboxItem<Props> {
         }
 
         if (event.key === 'Enter') {
-            event.preventDefault();
-            event.stopPropagation();
-            this.props.onClick();
-        } else if (event.key === ' ') {
-            // Space triggers button onKeyUp but we need to prevent PTT here
-            event.preventDefault();
-            event.stopPropagation();
-        }
-    }
-
-    _onKeyUp: (Object) => void;
-
-    /**
-     * Handles ' ' (Space) key on the button to trigger onClick for
-     * accessibility.
-     *
-     * @param {Object} event - The key event.
-     * @private
-     * @returns {void}
-     */
-    _onKeyUp(event) {
-        // If the event coming to the dialog has been subject to preventDefault
-        // we don't handle it here.
-        if (event.defaultPrevented) {
-            return;
-        }
-
-        if (event.key === ' ') {
             event.preventDefault();
             event.stopPropagation();
             this.props.onClick();
@@ -101,7 +73,6 @@ export default class ToolboxItem extends AbstractToolboxItem<Props> {
             className: className + (disabled ? ' disabled' : ''),
             onClick: disabled ? undefined : onClick,
             onKeyDown: this._onKeyDown,
-            onKeyUp: this._onKeyUp,
             tabIndex: 0,
             role: 'button'
         };
@@ -138,11 +109,11 @@ export default class ToolboxItem extends AbstractToolboxItem<Props> {
      * @returns {ReactElement}
      */
     _renderIcon() {
-        const { disabled, icon, showLabel, toggled } = this.props;
+        const { customClass, disabled, icon, showLabel, toggled } = this.props;
         const iconComponent = <Icon src = { icon } />;
         const elementType = showLabel ? 'span' : 'div';
         const className = `${showLabel ? 'overflow-menu-item-icon' : 'toolbox-icon'} ${
-            toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''}`;
+            toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''} ${customClass ?? ''}`;
 
         return React.createElement(elementType, { className }, iconComponent);
     }
